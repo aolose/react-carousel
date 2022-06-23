@@ -2,17 +2,19 @@ import './i.scss'
 import {useMemo, useState} from "react";
 
 export const Carousel = ({
+                             slideIndex = 0,
                              className = '',
                              interval = 5e3,
-                             autoPlay = () => 0,
+                             autoPlay = false,
                              dot = false,
                              spacing = 0,
                              threshold = 0.2,
-                             children = []
+                             children = [],
+                             beforeSlide
                          }) => {
     const state = useMemo(() => {
         return {
-            index: 0,
+            index: slideIndex,
             el: null,
             next: 0,
             stop: 0
@@ -77,9 +79,8 @@ export const Carousel = ({
 
             function onEnd() {
                 if (!start) return
-                start = 0
                 const mv = lastX - x
-                if(mv===0){
+                if (mv === 0) {
                     setAni(1)
                     return
                 }
@@ -87,16 +88,25 @@ export const Carousel = ({
                 const absR = Math.abs(r)
                 const c = r / absR
                 if (absR > threshold) {
-                    fixIndex(c)
+                    if (typeof beforeSlide === 'function') {
+                        setTimeout(beforeSlide, 0,
+                            state.index % length,
+                            (state.index - c + length) % length,
+                        )
+                    }
                 }
-                renderTransform(mv)
+                setAni(1)
                 lastX = x = 0
+                state.index -= c
+                setTimeout(renderTransform, 20)
+                setTimeout(renderTransform, 550)
+                setTimeout(fixIndex, 30)
+                setTimeout(setAni, 540)
+                setTimeout(setAni, 600, 1)
                 setTimeout(() => {
-                    state.index -= c
-                    setAni(1)
-                    state.next = Date.now() + interval
-                }, 30)
-                setTimeout(renderTransform, 60)
+                    start = 0
+                }, 600,)
+                state.next = Date.now() + interval + 600
             }
 
             function next(start) {
@@ -142,7 +152,9 @@ export const Carousel = ({
         <div className={'z-cal-box'} ref={el => init(el)}>
             <div className={'slider-list'} style={style}>
                 {children.concat(children, children).map(
-                    (a, k) => <div className={'z-cal-itm'} key={k} style={s0}>{a}</div>
+                    (a, k) => <div className={'z-cal-itm'} key={k} style={s0}>
+                        {a}
+                    </div>
                 )}
             </div>
         </div>
