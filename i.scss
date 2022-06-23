@@ -1,0 +1,47 @@
+.z-carousel {
+
+}
+.z-cal-box{
+  overflow: hidden;
+  position: relative;
+  padding-top: 23%;
+}
+.slider-list {
+  transition: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  transform: translate3d(0, 0, 0);
+  display: flex;
+}
+
+.--ani {
+  .slider-list {
+    transition: transform .6s
+  }
+}
+
+.z-cal-itm {
+  flex: 1;
+  height: 100%;
+}
+
+.z-cal-dots{
+  padding: .1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  i{
+    display: block;
+    border-radius: 50%;
+    background: #eee;
+    transition: .3s background-color;
+    height: .12rem;
+    width: .12rem;
+    margin: 0 .02rem;
+  }
+  .act{
+    background: rgba(10, 148, 227, 0.4);
+  }
+}
